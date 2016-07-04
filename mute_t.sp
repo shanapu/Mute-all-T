@@ -10,13 +10,10 @@
 
 //ConVars
 ConVar gc_bPlugin;
-ConVar gc_sAdminFlag;
 
 //Bools
 bool IsMuted[MAXPLAYERS+1] = {false, ...};
 
-//Strings
-char g_sAdminFlag[32];
 
 public Plugin myinfo = {
 	name = "MyJailbreak - Mute all Terrorists",
@@ -32,7 +29,6 @@ public void OnPluginStart()
 	AutoExecConfig_SetCreateFile(true);
 	
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_mute_t_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
-	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_mute_t_flag", "b", "Set flag for admin/vip to immune to mute.");
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -41,20 +37,6 @@ public void OnPluginStart()
 	HookEvent("round_poststart", RoundStart);
 	HookEvent("round_end", RoundEnd);
 	HookEvent("player_team", EventPlayerTeam);
-	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
-	
-	//FindConVar
-	gc_sAdminFlag.GetString(g_sAdminFlag , sizeof(g_sAdminFlag));
-}
-
-//ConVarChange for Strings
-
-public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
-{
-	if(convar == gc_sAdminFlag)
-	{
-		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
-	}
 }
 
 //Round start
@@ -100,7 +82,7 @@ public Action EventPlayerTeam(Event event, const char[] name, bool dontBroadcast
 
 public Action MuteClient(int client)
 {
-	if(IsValidClient(client,true,true) && !CheckVipFlag(client,g_sAdminFlag))
+	if(IsValidClient(client,true,true) && (GetUserAdmin(client) == INVALID_ADMIN_ID))
 	{
 		char EventDay[64];
 		GetEventDay(EventDay);
