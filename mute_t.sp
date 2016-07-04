@@ -19,20 +19,20 @@ bool IsMuted[MAXPLAYERS+1] = {false, ...};
 char g_sAdminFlag[32];
 
 public Plugin myinfo = {
-	name = "Mute all terror",
+	name = "MyJailbreak - Mute all Terrorists",
 	author = "shanapu",
-	description = "mute all terrorists except admin",
+	description = "Mute all terrorists while round run except admins or on EventDay",
 	version = "1.0",
 	url = "shanapu.de"
 };
 
 public void OnPluginStart()
 {
-	AutoExecConfig_SetFile("muteT");
+	AutoExecConfig_SetFile("MuteAllT", "MyJailbreak");
 	AutoExecConfig_SetCreateFile(true);
 	
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_mute_t_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
-	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_mute_t_flag", "b", "Set flag for admin/vip to set this Event Day.");
+	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_mute_t_flag", "b", "Set flag for admin/vip to immune to mute.");
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
